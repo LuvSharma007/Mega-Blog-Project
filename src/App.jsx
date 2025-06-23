@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import authService from './appwrite/auth';
 import {login , logout} from "./store/authSlice"
 import Header from "./components/Header/Header"
@@ -12,15 +12,17 @@ const App = () => {
   
   const dispatch = useDispatch();
 
+  const authStatus = useSelector(state => state.auth.status)
 
   useEffect(()=>{
     authService.isLogin()
     .then((userData)=>{
       if(userData){
-        dispatch(login({userData}))
+        dispatch(login(userData))
       }else{
         dispatch(logout())   // to update state again
       }
+      console.log('App render - auth status:', authStatus)
     }).catch((err)=>{
       console.log(`Error while getting login user ${err}`);      
     })
@@ -37,9 +39,7 @@ const App = () => {
           <Footer />
       </div>
     </div>
-  ) : <div>
-    <h1>User is Logout</h1>
-  </div>
+  ) : null
 
 }
 

@@ -7,7 +7,7 @@ import {useDispatch} from 'react-redux'
 import {useForm} from 'react-hook-form'
 
 
-function Signup() {
+const  Signup = () => {
     const navigate = useNavigate()
     const [error, setError] = useState("")
     const dispatch = useDispatch()
@@ -21,9 +21,13 @@ function Signup() {
                 const userData = await authService.isLogin()
                 if(userData) dispatch(login(userData));
                 navigate("/")
+                console.log('Signup component mounted')
+
             }
         } catch (error) {
             setError(error.message)
+            console.log(`Error Signup user `,error);
+            
         }
     }
 

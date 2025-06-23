@@ -19,7 +19,7 @@ const Login = () => {
         try {
             const session = await authService.login(data)
             if(session){
-            const userData = await authService.isLogin()
+            const userData = await authService.isLogin()   // get current user
             if(userData) dispatch(authLogin(userData))
             navigate('/')
             
@@ -46,7 +46,7 @@ const Login = () => {
                 Sign in to your Account
             </h2>
               <p className="mt-2 text-center text-base text-black/60">
-                    Don&apos;t have any account?&nbsp;
+                    Don't have any account?&nbsp;
                     <Link
                         to="/signup"
                         className="font-medium text-primary transition-all duration-200 hover:underline"

@@ -10,17 +10,25 @@ const Protected = ({children,authentication = true}) => {
     const [loading , setLoading] = useState(true);
     const authStatus = useSelector(state => state.auth.status)
 
-    useEffect(()=>{         
-      if(authentication && authStatus !== authentication){   // means user is not login
+    useEffect(()=>{    
+
+      if(authStatus === null) return;
+
+      if(authentication && !authStatus){   // means user is not login
         navigate("/login");
-      }else if(!authentication && authStatus !== authentication){  // 
+      }else if(!authentication && authStatus){  // 
         navigate("/");
+      }else{
+        setLoading(false)
       }
-      setLoading(false)
     },[authStatus,navigate,authentication])
 
+    if(authStatus === null || loading){
+      return <h1>Loading...</h1>
+    }
+
   return (
-    loading ? <h1>Loading...</h1> : <>{children}</>
+  <>{children}</>
   )
 }
 
