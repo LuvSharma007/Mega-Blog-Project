@@ -19,7 +19,7 @@ const  Signup = () => {
             const userData = await authService.createAccount(data)
             if (userData) {
                 const userData = await authService.isLogin()
-                if(userData) dispatch(login(userData));
+                if(userData) dispatch(login({userData}));
                 navigate("/")
                 console.log('Signup component mounted')
 

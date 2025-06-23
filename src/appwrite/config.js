@@ -1,65 +1,63 @@
 import confg from "../conf/conf";
 
-import { Client , ID , Databases , Query , Storage } from 'appwrite'
+import { Client, ID, Databases, Query, Storage } from 'appwrite'
 
-export class Service{
+export class Service {
     client = new Client();
     databases;
     Storage;
-    constructor(){
+    constructor() {
         this.client
-        .setEndpoint(confg.appwriteUrl)
-        .setProject(confg.appwriteProjectId)
+            .setEndpoint(confg.appwriteUrl)
+            .setProject(confg.appwriteProjectId)
         this.Storage = new Storage(this.client)
         this.databases = new Databases(this.client)
     }
 
-    async createPost({title , slug , content , featuredImage, status, userId}){
+    async createPost({ title, slug, content, featuredImage, status, userId }) {
         try {
             return await this.databases.createDocument(
                 confg.appwriteDatabaseId,
                 confg.appwriteCollectionId,
-                ID,  // documentId
+                ID.unique(),  // documentId
                 {
-                title,
-                slug,
-                content,
-                featuredImage,
-                status,
-                userId
-            }
-        );
+                    title,
+                    slug,
+                    content,
+                    featuredImage,
+                    status,
+                    userId
+                }
+            );
         } catch (error) {
             console.log(`Error creating post : ${error}`);
         }
     }
-    
-    async updatePost(ID,{title , slug , content , featuredImage, status,userId}){
+
+    async updatePost(Id, { title, slug, content, featuredImage, status, userId }) {
         try {
             return await this.databases.updateDocument(
                 confg.appwriteDatabaseId,
                 confg.appwriteCollectionId,
-                ID,
+                Id,
                 {
-                title,
-                slug,
-                content,
-                featuredImage,
-                status,
-                userId
-            }
+                    title,
+                    content,
+                    featuredImage,
+                    status,
+                }
             )
         } catch (error) {
             console.log(`Error updating post : ${error}`);
         }
     }
 
-    async deletePost(ID){
+    async deletePost(Id) {
         try {
             await this.databases.deleteDocument(
                 confg.appwriteDatabaseId,
                 confg.appwriteCollectionId,
-                ID,
+                Id,
             )
             return true;
         } catch (error) {
@@ -68,12 +66,12 @@ export class Service{
         }
     }
 
-    async getPost(ID){
+    async getPost(Id) {
         try {
             return await this.databases.getDocument(
                 confg.appwriteDatabaseId,
                 confg.appwriteCollectionId,
-                ID
+                Id,
             )
         } catch (error) {
             console.log(`Error getting post : ${error}`);
@@ -81,7 +79,7 @@ export class Service{
         }
     }
 
-    async getAllPost(queries = [Query.equal("status","active")]){
+    async getAllPost(queries = [Query.equal("status", "active")]) {
         try {
             return await this.databases.listDocuments(
                 confg.appwriteDatabaseId,
@@ -97,7 +95,7 @@ export class Service{
 
     // file upload service
 
-    async uploadFile(file){
+    async uploadFile(file) {
         try {
             return await this.Storage.createFile(
                 confg.appwriteBucketId,
@@ -109,7 +107,7 @@ export class Service{
         }
     }
 
-    async removeFile(fileId){
+    async removeFile(fileId) {
         try {
             await this.Storage.deleteFile(
                 confg.appwriteBucketId,
@@ -122,7 +120,7 @@ export class Service{
         }
     }
 
-    async getFilePreview(fileId){
+    async getFilePreview(fileId) {
         try {
             return await this.Storage.getFilePreview(
                 confg.appwriteBucketId,

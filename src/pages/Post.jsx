@@ -1,35 +1,34 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import appwriteService from '../appwrite/config'
+import parse from "html-react-parser"
+import { Button, Container } from '../components';
 
 const Posts = () => {
 
-    const [post , setPosts] = useState(null);
-    const Id = useParams;
+    const [post, setPost] = useState(null);
+    const {Id}= useParams();
     const navigate = useNavigate();
     const userData = useSelector(state => state.auth.userData);
     const isAuthor = post && userData ? post.userId === userData.$id : false
 
-    useEffect(()=>{
-        const fetchPost = async()=>{
-            if(Id){
-            const post = await appwriteService.getPost(Id)
-            if(post){
-                setPosts(post);
-            }else{
-                navigate("/");
-            }
-        }else{
-            navigate("/");
+    useEffect(() => {
+        if(Id){
+            appwriteService.getPost(Id).then((post) =>{
+                if(post){
+                    setPost(post);
+                }else{
+                    navigate("/")
+                }
+            })
         }
-        }
-        fetchPost();
-    },[slug , navigate]);
+        else navigate("/");
+    }, [Id, navigate]);
 
-    const deletePost = () =>{
-        appwriteService.deletePost(post.$id).then((status=>{
-            if(status){
+    const deletePost = () => {
+        appwriteService.deletePost(post.$id).then((status => {
+            if (status) {
                 appwriteService.deleteFile(post.featuredImage);
                 navigate('/');
             }
@@ -64,7 +63,7 @@ const Posts = () => {
                 </div>
                 <div className="browser-css">
                     {parse(post.content)}
-                    </div>
+                </div>
             </Container>
         </div>
     ) : null;

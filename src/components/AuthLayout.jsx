@@ -21,14 +21,15 @@ const Protected = ({children,authentication = true}) => {
       }else{
         setLoading(false)
       }
-    },[authStatus,navigate,authentication])
+      setLoading(false);
+    },[authStatus, navigate, authentication]);
 
     if(authStatus === null || loading){
       return <h1>Loading...</h1>
     }
 
   return (
-  <>{children}</>
+    loading ? <h1>Loading...</h1> : <div>{children}</div>
   )
 }
 

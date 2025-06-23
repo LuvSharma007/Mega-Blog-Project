@@ -19,8 +19,8 @@ const Login = () => {
         try {
             const session = await authService.login(data)
             if(session){
-            const userData = await authService.isLogin()   // get current user
-            if(userData) dispatch(authLogin(userData))
+            const userData = await authService.isLogin()
+            if(userData) dispatch(authLogin({userData}))
             navigate('/')
             
             }else{
