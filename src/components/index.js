@@ -7,13 +7,13 @@ import RTE from "./RTE"
 import Select from "./Select"
 import Button from "./Button"
 import Input from "./Input"
-import Signup from "../pages/Signup";
+import Signup from "../pages/SignupPage";
 import PostForm from "./postForm/PostForm"
 import PostCard from "./PostCard"
 import AuthLayout from "./AuthLayout"
 import Login from "./Login"
 
-export{
+export {
     Header,
     Footer,
     Container,
