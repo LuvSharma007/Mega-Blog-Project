@@ -19,7 +19,7 @@ export class Service{
             return await this.databases.createDocument(
                 confg.appwriteDatabaseId,
                 confg.appwriteCollectionId,
-                ID,  // documentId
+                ID.unique(),  // documentId
                 {
                 title,
                 slug,
@@ -34,12 +34,12 @@ export class Service{
         }
     }
     
-    async updatePost(ID,{title , slug , content , featuredImage, status,userId}){
+    async updatePost(documentId,{title , slug , content , featuredImage, status,userId}){
         try {
             return await this.databases.updateDocument(
                 confg.appwriteDatabaseId,
                 confg.appwriteCollectionId,
-                ID,
+                documentId,
                 {
                 title,
                 slug,
@@ -54,12 +54,12 @@ export class Service{
         }
     }
 
-    async deletePost(ID){
+    async deletePost(documentId){
         try {
             await this.databases.deleteDocument(
                 confg.appwriteDatabaseId,
                 confg.appwriteCollectionId,
-                ID,
+                documentId,
             )
             return true;
         } catch (error) {
@@ -68,12 +68,12 @@ export class Service{
         }
     }
 
-    async getPost(ID){
+    async getPost(documentId){
         try {
             return await this.databases.getDocument(
                 confg.appwriteDatabaseId,
                 confg.appwriteCollectionId,
-                ID
+                documentId
             )
         } catch (error) {
             console.log(`Error getting post : ${error}`);

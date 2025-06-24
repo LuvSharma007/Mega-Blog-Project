@@ -18,8 +18,9 @@ const  Signup = () => {
         try {
             const userData = await authService.createAccount(data)
             if (userData) {
-                const userData = await authService.isLogin()
+                const userData = await authService.isLogin()  // get current user                
                 if(userData) dispatch(login(userData));
+                console.log("AuthStatus got updated due to signup",userData.status);
                 navigate("/")
                 console.log('Signup component mounted')
 

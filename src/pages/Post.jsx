@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import appwriteService from "../appwrite/config"
 
 
 const Posts = () => {
@@ -25,12 +26,12 @@ const Posts = () => {
         }
         }
         fetchPost();
-    },[slug , navigate]);
+    },[Id ,navigate]);
 
     const deletePost = () =>{
         appwriteService.deletePost(post.$id).then((status=>{
             if(status){
-                appwriteService.deleteFile(post.featuredImage);
+                appwriteService.deleteFile(post.featuredImage.Id);
                 navigate('/');
             }
         }))

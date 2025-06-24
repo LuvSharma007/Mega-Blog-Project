@@ -12,22 +12,50 @@ const App = () => {
   
   const dispatch = useDispatch();
 
-  const authStatus = useSelector(state => state.auth.status)
 
-  useEffect(()=>{
-    authService.isLogin()
-    .then((userData)=>{
-      if(userData){
-        dispatch(login(userData))
-      }else{
-        dispatch(logout())   // to update state again
+  useEffect(() => {
+  const getCurrentUser = async () => {
+    try {
+      const currentUser = await authService.isLogin();
+      if (currentUser) {
+        dispatch(login(currentUser));
+        console.log('App render - user found :', currentUser);
+      } else {
+        dispatch(logout());
+        console.log('App render - no user found');
       }
-      console.log('App render - auth status:', authStatus)
-    }).catch((err)=>{
-      console.log(`Error while getting login user ${err}`);      
-    })
-    .finally(()=>setLoading(false))
-  },[])
+    } catch (err) {
+      console.log(`Error while getting login user: ${err}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  getCurrentUser();
+  
+      // authService.isLogin()
+      // .then((userData)=>{
+      //   if(userData){
+      //     dispatch(login(userData))
+      //   console.log('App render - auth status:', authStatus)
+  
+      //   }else{
+      //     dispatch(logout())   // to update state again
+      //   }
+      //   console.log('App render - auth status:', authStatus)
+      // }).catch((err)=>{
+      //   console.log(`Error while getting login user ${err}`);      
+      // })
+      // .finally(()=>setLoading(false))
+
+}, [dispatch]);
+
+    
+
+
+
+
+
    
   return !loading ? (
     <div className='min-h-screen flex flex-wrap content-between bg-gray-400'>

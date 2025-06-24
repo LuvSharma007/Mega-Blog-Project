@@ -1,8 +1,9 @@
 import React from 'react'
 import { Editor } from '@tinymce/tinymce-react'
 import { Controller } from 'react-hook-form'
+import confg from '../conf/conf'
 
-const RTE = (name,control , label ) => {
+const RTE = ({name,control , label , defaultValue=""}) => {
   return (
     <div className='w-full'>
       {label && <label className='test-sm text-gray-600'>{label}</label>}
@@ -11,7 +12,8 @@ const RTE = (name,control , label ) => {
       control={control}
       render={({field:{onChange}})=>(
         <Editor
-        initialValue='<p>whats in your mind</p>'
+        apiKey={confg.TinyMceApiKey}
+        initialValue={defaultValue}
         init={{
           height:500,
           menubar:true,
@@ -26,7 +28,7 @@ const RTE = (name,control , label ) => {
             'removeformat | help',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
         }}
-        onEditorChange={onchange}
+        onEditorChange={onChange}
         />
       )}
       

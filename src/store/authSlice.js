@@ -2,7 +2,7 @@ import { createSlice} from "@reduxjs/toolkit";
 
 const initialState = {
     status:false,
-    userData:null
+    userData:null,
 }
 
 const authSlice = createSlice({
@@ -10,7 +10,6 @@ const authSlice = createSlice({
     initialState,
     reducers:{  // state to change state after initial value     // actions se milta hai payload
         login:(state ,action)=>{
-            console.log('Login action dispatched:', action.payload)
             state.status = true;
             state.userData = action.payload;
         },

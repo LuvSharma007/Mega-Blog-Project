@@ -7,17 +7,22 @@ const AllPosts = () => {
     const [posts , setPosts] = useState([])
     const [error , setError] = useState('')
     
-    useEffect(async()=>{
+    useEffect(()=>{
         setError('')
-        try {
-            const posts = await appwriteService.getAllPost([])
+        const AllPosts = async () =>{
+            try {
+            const posts =  await appwriteService.getAllPost([])            
+            
             if(posts){
-                setPosts(posts)
+                setPosts(posts.documents)
+                console.log('AllPost component is mount');                
             }
         } catch (error) {
             console.log("Error fetching posts ",error);
             setError(error);            
         }
+        }
+        AllPosts();
     },[])
     
 

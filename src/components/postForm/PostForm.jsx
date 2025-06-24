@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import RTE from '../RTE'
 
-const PostFrom = ({post}) => {
+const PostForm = ({post}) => {
 
     const [error , setError] = useState('');
 
@@ -26,16 +26,16 @@ const PostFrom = ({post}) => {
         setError('')
         try {
             if(post){
-                const file = await data.image[0] ? appwriteServies.uploadFile(data.image[0]) : null
+                const file = await data.image[0] ? await appwriteServies.uploadFile(data.image[0]) : null
                 if(file){
                     appwriteServies.removeFile(post.featuredImage)
                 }
-                const dbPost = await appwriteServies.updatePost(post.$id,{...data,featuredImage: file ? file.$id : null })
+                const dbPost = await appwriteServies.updatePost(post.$id,{...data,featuredImage: file ? file.$id : undefined })
                 if(dbPost){
                     navigate(`/post/${dbPost.$id}`)
                 }
             }else{
-                const file  = await data.image[0] ? appwriteServies.uploadFile(data.image[0]): null ;
+                const file  = await appwriteServies.uploadFile(data.image[0]) ;
                 
                 if(file){
                     const fileId = file.$id
@@ -46,12 +46,13 @@ const PostFrom = ({post}) => {
                     })
                     if(newPost){
                         navigate(`/post/${newPost.$id}`)
-                    }
+                    }                    
                 } 
             }
         } catch (error) {
             setError(error);
-            console.log('Something went Wrong !');            
+
+            console.log('Something went Wrong !',error);            
         }
     }
 
@@ -59,7 +60,7 @@ const PostFrom = ({post}) => {
 
     const slugTransform = useCallback((value)=>{
         if(value && typeof value === 'string'){
-            return value.trim('')
+            return value.trim()
             .toLowerCase()
             .replace(/[^a-zA-Z\d\s]/g, '') // removes unwanted characters
             .replace(/\s+/g, '-')          // replaces all whitespace with "-"
@@ -71,9 +72,9 @@ const PostFrom = ({post}) => {
     useEffect(()=>{
         const subscription = watch((value,{name})=>{
             if(name === 'title'){
-                setValue('slug',slugTransform(value.title,
+                setValue('slug',slugTransform(value.title),
                     {shouldValidate:true}
-                ))
+                )
             }
         })
 
@@ -85,7 +86,7 @@ const PostFrom = ({post}) => {
 
   return (
     <>
-    {error && <p className='text-red-600 mt-8 text-center'>{error}</p>}
+    {/* {error && <p className='text-red-600 mt-8 text-center'>{error}</p>} */}
     <form onSubmit={handleSubmit(submit)}>
         <div>
             <Input 
@@ -110,7 +111,7 @@ const PostFrom = ({post}) => {
             }}
             />
             <RTE label='content :' name="content"
-            control={control} defaultValues={getValues("content")}
+            control={control} defaultValue={getValues("content")}
             />
         </div>
         <div className='w-1/3 px-2'>
@@ -125,24 +126,24 @@ const PostFrom = ({post}) => {
         />
         {post && (
             <div className='w-full mb-4'>
-                <img src={appwriteServies.getFilePreview} alt={post.title} className='rounded-lg' />
+                <img src={appwriteServies.getFilePreview(post.featuredImage)} alt={post.title} className='rounded-lg' />
             </div>
         )}
         <Select 
         options={['active',"Incative"]}
-        label="status"
+        label="Status"
         className="mb-4"
         {...register("status",{
             required:true
         })}
         />
-        <button type='submit' bgColor={post ? "bg-green-500": undefined} className='w-full'>
+        <Button type='submit' bgColor={post ? "bg-green-500": undefined} className='w-full'>
             {post ? "update":"Submit"}
-        </button>
+        </Button>
         </div>
     </form>
     </>
   )
 }
 
-export default PostFrom
+export default PostForm
