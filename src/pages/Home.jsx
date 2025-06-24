@@ -15,7 +15,7 @@ const Home = () => {
         SetError('')
         setLoading(true)
         try {
-            const posts = await appwriteService.getAllPost();
+            const posts = await appwriteService.getAllPost([]);
             if(posts){
                 setPosts(posts.documents);
             }
