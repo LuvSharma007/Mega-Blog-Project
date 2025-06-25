@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import appwriteService from "../appwrite/config"
+import { Container ,Button } from '../components/index';
+import parser from "html-react-parser"
 
 
 const Posts = () => {
 
     const [post , setPosts] = useState(null);
-    const Id = useParams;
+    const {Id} = useParams();
     const navigate = useNavigate();
     const userData = useSelector(state => state.auth.userData);
     const isAuthor = post && userData ? post.userId === userData.$id : false
@@ -64,7 +66,7 @@ const Posts = () => {
                     <h1 className="text-2xl font-bold">{post.title}</h1>
                 </div>
                 <div className="browser-css">
-                    {parse(post.content)}
+                    {parser(post.content)}
                     </div>
             </Container>
         </div>

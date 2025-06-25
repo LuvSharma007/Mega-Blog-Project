@@ -11,11 +11,11 @@ const AllPosts = () => {
         setError('')
         const AllPosts = async () =>{
             try {
-            const posts =  await appwriteService.getAllPost([])            
+            const allPosts =  await appwriteService.getAllPost()   // yeah i got mad here while naming variable         
             
-            if(posts){
-                setPosts(posts.documents)
-                console.log('AllPost component is mount');                
+            if(allPosts){
+                setPosts(allPosts.documents)
+                console.log(allPosts);               
             }
         } catch (error) {
             console.log("Error fetching posts ",error);
@@ -26,15 +26,14 @@ const AllPosts = () => {
     },[])
     
 
-
   return (
     <div className='w-full py-8'>
     {error && <p className='text-red-600 mt-8 text-center'>{error}</p>}
         <Container>
-            <div className='flex- flex-wrap'>
+            <div className='flex flex-wrap'>
                 {posts.map((post)=>(
                     <div key={post.$id} className='p-2 w-1/4'>
-                        <PostCard post={post}/>
+                        <PostCard {...post}/>
                     </div>
                 ))}
             </div>

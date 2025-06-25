@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import {Button , Input , Select } from "../index"
-import appwriteServies from "../../appwrite/config"
+import appwriteService from "../../appwrite/config"
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import RTE from '../RTE'
@@ -13,7 +13,7 @@ const PostForm = ({post}) => {
     const {register ,handleSubmit , watch, setValue , control , getValues} = useForm({
         defaultValues:{
             title: post?.title || "",
-            slug:post?.slug || "",
+            slug:post?.$id || "",
             content:post?.content || "",
             status:post?.status || 'active',
         }
@@ -26,21 +26,21 @@ const PostForm = ({post}) => {
         setError('')
         try {
             if(post){
-                const file = await data.image[0] ? await appwriteServies.uploadFile(data.image[0]) : null
+                const file = await data.image[0] ? await appwriteService.uploadFile(data.image[0]) : null
                 if(file){
-                    appwriteServies.removeFile(post.featuredImage)
+                    appwriteService.removeFile(post.featuredImage)
                 }
-                const dbPost = await appwriteServies.updatePost(post.$id,{...data,featuredImage: file ? file.$id : undefined })
+                const dbPost = await appwriteService.updatePost(post.$id,{...data,featuredImage: file ? file.$id : undefined })
                 if(dbPost){
                     navigate(`/post/${dbPost.$id}`)
                 }
             }else{
-                const file  = await appwriteServies.uploadFile(data.image[0]) ;
+                const file  = await appwriteService.uploadFile(data.image[0]) ;
                 
                 if(file){
                     const fileId = file.$id
                     data.featuredImage = fileId;
-                    const newPost = await appwriteServies.createPost({
+                    const newPost = await appwriteService.createPost({
                         ...data,
                         userId: userData.$id
                     })
@@ -87,7 +87,7 @@ const PostForm = ({post}) => {
   return (
     <>
     {/* {error && <p className='text-red-600 mt-8 text-center'>{error}</p>} */}
-    <form onSubmit={handleSubmit(submit)}>
+    <form onSubmit={handleSubmit(submit)} className='flex flex-wrap'>
         <div>
             <Input 
             label='Title:'
@@ -126,11 +126,11 @@ const PostForm = ({post}) => {
         />
         {post && (
             <div className='w-full mb-4'>
-                <img src={appwriteServies.getFilePreview(post.featuredImage)} alt={post.title} className='rounded-lg' />
+                <img src={appwriteService.getFilePreview(post.featuredImage)} alt={post.title} className='rounded-lg' />
             </div>
         )}
         <Select 
-        options={['active',"Incative"]}
+        options={['active',"Inactive"]}
         label="Status"
         className="mb-4"
         {...register("status",{

@@ -5,12 +5,12 @@ import { Client , ID , Databases , Query , Storage } from 'appwrite'
 export class Service{
     client = new Client();
     databases;
-    Storage;
+    bucket;
     constructor(){
         this.client
         .setEndpoint(confg.appwriteUrl)
         .setProject(confg.appwriteProjectId)
-        this.Storage = new Storage(this.client)
+        this.bucket = new Storage(this.client)
         this.databases = new Databases(this.client)
     }
 
@@ -99,7 +99,7 @@ export class Service{
 
     async uploadFile(file){
         try {
-            return await this.Storage.createFile(
+            return await this.bucket.createFile(
                 confg.appwriteBucketId,
                 ID.unique(),
                 file,
@@ -111,7 +111,7 @@ export class Service{
 
     async removeFile(fileId){
         try {
-            await this.Storage.deleteFile(
+            await this.bucket.deleteFile(
                 confg.appwriteBucketId,
                 fileId,
             )
@@ -122,12 +122,13 @@ export class Service{
         }
     }
 
-    async getFilePreview(fileId){
+    getFilePreview(fileId){
         try {
-            return await this.Storage.getFilePreview(
+            return this.bucket.getFilePreview(
                 confg.appwriteBucketId,
                 fileId,
-            )
+            );
+            
         } catch (error) {
             console.log(`Error Preview file : ${error}`);
         }
