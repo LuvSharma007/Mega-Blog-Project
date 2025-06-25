@@ -4,11 +4,6 @@ import { Link } from 'react-router-dom'
 import { href } from 'react-router-dom'
 
 const PostCard = ({$id , title , featuredImage}) => {
-  console.log(`Id ${$id}`);
-  console.log(`title ${title}`);
-  console.log(`featuredImage ${featuredImage}`);
-  // const previewImage = featuredImage.href;
-  
 
   return (
     <Link to={`/post/${$id}`}>
