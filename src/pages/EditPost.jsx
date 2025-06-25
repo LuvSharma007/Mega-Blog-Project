@@ -9,18 +9,20 @@ const EditPost = () => {
     const Id = useParams()
     const navigate = useNavigate()
 
-    useEffect( async()=>{
-        try {
-            const post = await appwriteService.getPost(Id);
-            if(post){
-                setPosts(post)
+    useEffect(()=>{
+        const editPost = async () =>{
+            try {
+                const post = await appwriteService.getPost(Id);
+                if(post){
+                    setPosts(post)
+                }
+            } catch (error) {
+                console.log("Error while edit post",error);
+                navigate('/')
             }
-        } catch (error) {
-            set
-            console.log("Error while edit post",error);
-            navigate('/')
         }
-    },[slug,navigate])
+        editPost();
+    },[Id,navigate])
   return post ?  (
     <div className='py-8'>
         <Container>

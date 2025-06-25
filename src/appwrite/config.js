@@ -122,16 +122,13 @@ export class Service{
         }
     }
 
-    getFilePreview(fileId){
-        try {
-            return this.bucket.getFilePreview(
-                confg.appwriteBucketId,
-                fileId,
-            );
-            
-        } catch (error) {
-            console.log(`Error Preview file : ${error}`);
-        }
+    getImage(fileId){
+        const url = this.bucket.getFileView(
+            confg.appwriteBucketId,
+            fileId,
+        )
+        return url;
+        
     }
 }
 

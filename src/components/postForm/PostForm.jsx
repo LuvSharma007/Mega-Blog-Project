@@ -26,7 +26,7 @@ const PostForm = ({post}) => {
         setError('')
         try {
             if(post){
-                const file = await data.image[0] ? await appwriteService.uploadFile(data.image[0]) : null
+                const file = data.image[0] ? await appwriteService.uploadFile(data.image[0]) : null
                 if(file){
                     appwriteService.removeFile(post.featuredImage)
                 }
@@ -88,7 +88,7 @@ const PostForm = ({post}) => {
     <>
     {/* {error && <p className='text-red-600 mt-8 text-center'>{error}</p>} */}
     <form onSubmit={handleSubmit(submit)} className='flex flex-wrap'>
-        <div>
+        <div className='w-2/3 px-2'>
             <Input 
             label='Title:'
             placeholder="Title"
@@ -126,7 +126,7 @@ const PostForm = ({post}) => {
         />
         {post && (
             <div className='w-full mb-4'>
-                <img src={appwriteService.getFilePreview(post.featuredImage)} alt={post.title} className='rounded-lg' />
+                <img src={appwriteService.getImage(post.featuredImage)} alt={post.title} className='rounded-lg' />
             </div>
         )}
         <Select 

@@ -44,7 +44,7 @@ const Posts = () => {
             <Container>
                 <div className="w-full flex justify-center mb-4 relative border rounded-xl p-2">
                     <img
-                        src={appwriteService.getFilePreview(post.featuredImage)}
+                        src={appwriteService.getImage(post.featuredImage)}
                         alt={post.title}
                         className="rounded-xl"
                     />
