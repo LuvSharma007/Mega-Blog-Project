@@ -11,7 +11,7 @@ const postSlice = createSlice({
     initialState,
     reducers:
     {
-        setPost: (state, action) => {
+        setPosts: (state, action) => {
             state.posts = action.payload
         },
         addPost:(state , action)=>{
@@ -38,6 +38,6 @@ const postSlice = createSlice({
     }
 })
 
-export const {setPost , addPost , deletePost , updatePost , clearposts , setLoading , setError , clearError} = postSlice.actions;
+export const {setPosts , addPost , deletePost , updatePost , clearposts , setLoading , setError , clearError} = postSlice.actions;
 
 export default postSlice.reducer;

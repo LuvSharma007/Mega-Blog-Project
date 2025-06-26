@@ -2,13 +2,12 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import {Button , Input , Select } from "../index"
 import appwriteService from "../../appwrite/config"
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import RTE from '../RTE'
+import { addPost, updatePost } from '../../store/postSlice'
 
 const PostForm = ({post}) => {
-
-    const [error , setError] = useState('');
 
     const {register ,handleSubmit , watch, setValue , control , getValues} = useForm({
         defaultValues:{
@@ -20,10 +19,10 @@ const PostForm = ({post}) => {
     })
 
     const navigate = useNavigate()
-    const userData = useSelector(state => state.auth.userData)
+    const userData = useSelector(state => state.auth.userData);
+    const dispatch = useDispatch();
 
     const submit = async(data)=>{
-        setError('')
         try {
             if(post){
                 const file = data.image[0] ? await appwriteService.uploadFile(data.image[0]) : null
@@ -31,7 +30,9 @@ const PostForm = ({post}) => {
                     appwriteService.removeFile(post.featuredImage)
                 }
                 const dbPost = await appwriteService.updatePost(post.$id,{...data,featuredImage: file ? file.$id : undefined })
+
                 if(dbPost){
+                    dispatch(updatePost(dbPost));
                     navigate(`/post/${dbPost.$id}`)
                 }
             }else{
@@ -45,13 +46,12 @@ const PostForm = ({post}) => {
                         userId: userData.$id
                     })
                     if(newPost){
+                        dispatch(addPost(newPost));
                         navigate(`/post/${newPost.$id}`)
                     }                    
                 } 
             }
         } catch (error) {
-            setError(error);
-
             console.log('Something went Wrong !',error);            
         }
     }
@@ -67,7 +67,6 @@ const PostForm = ({post}) => {
         }
         return ''
     })
-
 
     useEffect(()=>{
         const subscription = watch((value,{name})=>{
@@ -86,7 +85,6 @@ const PostForm = ({post}) => {
 
   return (
     <>
-    {/* {error && <p className='text-red-600 mt-8 text-center'>{error}</p>} */}
     <form onSubmit={handleSubmit(submit)} className='flex flex-wrap'>
         <div className='w-2/3 px-2'>
             <Input 

@@ -2,29 +2,33 @@ import React from 'react'
 import { useEffect , useState } from 'react'
 import appwriteService from "../appwrite/config"
 import { Container , PostCard } from '../components'
-
+import { useDispatch, useSelector } from 'react-redux'
+import { setError, setLoading, setPosts } from '../store/postSlice'
 
 const Home = () => {
 
-    const [posts , setPosts] = useState([])
-    const [error , SetError] = useState('')
-    const [loading , setLoading] = useState(false)
+    const posts = useSelector(state => state.posts.posts)
+    
+    const error = useSelector(state => state.posts.error)
+    
+    const loading = useSelector(state => state.posts.loading)
+    const dispatch = useDispatch();
 
     useEffect(()=>{
         const fetchPosts = async () =>{
-        SetError('')
-        setLoading(true)
+        dispatch(setError(null));
+        dispatch(setLoading(true));
         try {
             const posts = await appwriteService.getAllPost();
             if(posts){
-                setPosts(posts.documents);
+                dispatch(setPosts(posts.documents))
             }
-            setLoading(false);
+            dispatch(setLoading(false)); 
         } catch (error) {
             console.log('Error fetching errors',error);
-            SetError(error);
-            setLoading(false);
+            dispatch(setError(error.message || "something went wrong while fetching posts"))
         }
+        dispatch(setLoading(false))
         }
         fetchPosts();
     },[])

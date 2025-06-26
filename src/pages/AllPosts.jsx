@@ -1,30 +1,43 @@
 import React, { useEffect, useState } from 'react'
 import appwriteService from "../appwrite/config"
 import { Container , PostCard } from '../components'
+import { useDispatch, useSelector } from 'react-redux'
+import { setError, setLoading, setPosts } from '../store/postSlice'
 
 const AllPosts = () => {
 
-    const [posts , setPosts] = useState([])
-    const [error , setError] = useState('')
     
+    const posts = useSelector(state=>state.posts.posts)
+    const error = useSelector(state => state.posts.error);
+    const loading = useSelector(state=>state.posts.loading);
+    const dispatch = useDispatch();
+
     useEffect(()=>{
-        setError('')
-        const AllPosts = async () =>{
+        const allPosts = async () =>{
+            dispatch(setError(null))
+            dispatch(setLoading(true));
             try {
-            const allPosts =  await appwriteService.getAllPost()   // yeah i got mad here while naming variable         
-            
+            const allPosts = await appwriteService.getAllPost();  
             if(allPosts){
-                setPosts(allPosts.documents)
-                console.log(allPosts);               
+                dispatch(setPosts(allPosts.documents));              
             }
+            dispatch(setLoading(false));
         } catch (error) {
+            dispatch(setError(error.msg || "Something went wrong while rendering all posts"))
+            dispatch(setLoading(false));
             console.log("Error fetching posts ",error);
-            setError(error);            
         }
         }
-        AllPosts();
-    },[])
+        allPosts();
+    },[dispatch])
     
+    if(loading) {
+        return (
+            <div className='w-full py-8 mt-4 text-center'>
+                <p className='text-xl animate-pulse'>Loading posts...</p>
+            </div>
+        );
+    }
 
   return (
     <div className='w-full py-8'>

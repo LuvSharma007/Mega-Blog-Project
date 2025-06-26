@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import appwriteService from "../appwrite/config"
 import { Container ,Button } from '../components/index';
@@ -8,18 +8,21 @@ import parser from "html-react-parser"
 
 const Posts = () => {
 
-    const [post , setPosts] = useState(null);
-    const {Id} = useParams();
+    const [post , setPost] = useState(null);
+    const {id} = useParams();
     const navigate = useNavigate();
     const userData = useSelector(state => state.auth.userData);
     const isAuthor = post && userData ? post.userId === userData.$id : false
+    const dispatch = useDispatch();
+    const error = useSelector(state => state.posts.error);
+    const loading = useSelector(state => state.posts.loading);
 
     useEffect(()=>{
         const fetchPost = async()=>{
-            if(Id){
-            const post = await appwriteService.getPost(Id)
+            if(id){
+            const post = await appwriteService.getPost(id);
             if(post){
-                setPosts(post);
+                setPost(post);
             }else{
                 navigate("/");
             }
@@ -28,15 +31,21 @@ const Posts = () => {
         }
         }
         fetchPost();
-    },[Id ,navigate]);
+    },[id ,navigate]);
 
-    const deletePost = () =>{
-        appwriteService.deletePost(post.$id).then((status=>{
-            if(status){
-                appwriteService.deleteFile(post.featuredImage.Id);
-                navigate('/');
+    const deletePost = async () =>{
+
+        try {
+            const deletedpost = await appwriteService.deletePost(post.$id)
+            if(deletedpost){
+                appwriteService.removeFile(post.featuredImage.Id)
+                dispatch(deletePost(deletedpost));
+                navigate("/");
             }
-        }))
+        } catch (error) {
+            console.log("Error getting post",error);
+
+        }
     }
 
     return post ? (
