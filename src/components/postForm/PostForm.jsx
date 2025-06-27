@@ -12,7 +12,7 @@ const PostForm = ({post}) => {
     const {register ,handleSubmit , watch, setValue , control , getValues} = useForm({
         defaultValues:{
             title: post?.title || "",
-            slug:post?.$id || "",
+            slug:post?.slug || "",
             content:post?.content || "",
             status:post?.status || 'active',
         }
@@ -27,7 +27,7 @@ const PostForm = ({post}) => {
             if(post){
                 const file = data.image[0] ? await appwriteService.uploadFile(data.image[0]) : null
                 if(file){
-                    appwriteService.removeFile(post.featuredImage)
+                    await appwriteService.removeFile(post?.featuredImage)
                 }
                 const dbPost = await appwriteService.updatePost(post.$id,{...data,featuredImage: file ? file.$id : undefined })
 
@@ -122,7 +122,7 @@ const PostForm = ({post}) => {
             required:!post
         })}
         />
-        {post && (
+        {post && post.featuredImage && (
             <div className='w-full mb-4'>
                 <img src={appwriteService.getImage(post.featuredImage)} alt={post.title} className='rounded-lg' />
             </div>

@@ -25,14 +25,6 @@ const Login = () => {
                         console.log('Login component mounted');
                     }
                 }
-            
-
-            // const session = await authService.login(data)
-            // if(session){
-            // const userData = await authService.isLogin()          
-            // if(userData) dispatch(authLogin(userData))
-            // navigate('/')
-
         } catch (error) {
             setError(error.message || 'failed to login' );
             console.log(`Error login user`,error);            

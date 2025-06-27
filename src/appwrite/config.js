@@ -73,7 +73,7 @@ export class Service{
             return await this.databases.getDocument(
                 confg.appwriteDatabaseId,
                 confg.appwriteCollectionId,
-                documentId
+                documentId,
             )
         } catch (error) {
             console.log(`Error getting post : ${error}`);

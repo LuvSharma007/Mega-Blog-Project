@@ -34,19 +34,21 @@ const Posts = () => {
     },[id ,navigate]);
 
     const deletePost = async () =>{
-
         try {
             const deletedpost = await appwriteService.deletePost(post.$id)
             if(deletedpost){
-                appwriteService.removeFile(post.featuredImage.Id)
-                dispatch(deletePost(deletedpost));
-                navigate("/");
+                const deletedImage = await appwriteService.removeFile(post.featuredImage.Id)
+                if(deletedImage){
+                    dispatch(deletePost(deletedpost));
+                    navigate("/");
+                }
             }
         } catch (error) {
             console.log("Error getting post",error);
 
         }
     }
+    
 
     return post ? (
         <div className="py-8">
