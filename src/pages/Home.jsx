@@ -12,6 +12,7 @@ const Home = () => {
     const error = useSelector(state => state.posts.error)
     
     const loading = useSelector(state => state.posts.loading)
+    const loginStatus = useSelector(state => state.auth.status)
     const dispatch = useDispatch();
 
     useEffect(()=>{
@@ -23,12 +24,12 @@ const Home = () => {
             if(posts){
                 dispatch(setPosts(posts.documents))
             }
-            dispatch(setLoading(false)); 
         } catch (error) {
             console.log('Error fetching errors',error);
             dispatch(setError(error.message || "something went wrong while fetching posts"))
+        }finally{
+            dispatch(setLoading(false))
         }
-        dispatch(setLoading(false))
         }
         fetchPosts();
     },[])
@@ -48,7 +49,7 @@ const Home = () => {
                 <div className='flex flex-wrap'>
                     <div className='p-2 w-full'>
                         <h1 className='text-2xl font-bold hover:text-gray-500'>
-                            Login to read posts
+                            {loginStatus ? "Add posts..." : "Login to add & read posts"}
                         </h1>
                     </div>
                 </div>

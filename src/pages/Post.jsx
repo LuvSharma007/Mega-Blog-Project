@@ -4,7 +4,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import appwriteService from "../appwrite/config"
 import { Container ,Button } from '../components/index';
 import parser from "html-react-parser"
-
+import {deletePost as deletePostAction} from "../store/postSlice"
 
 const Posts = () => {
 
@@ -33,13 +33,13 @@ const Posts = () => {
         fetchPost();
     },[id ,navigate]);
 
-    const deletePost = async () =>{
+    const deletePostHandler = async () =>{
         try {
             const deletedpost = await appwriteService.deletePost(post.$id)
             if(deletedpost){
-                const deletedImage = await appwriteService.removeFile(post.featuredImage.Id)
+                const deletedImage = await appwriteService.removeFile(post.featuredImage)
                 if(deletedImage){
-                    dispatch(deletePost(deletedpost));
+                    dispatch(deletePostAction(deletedpost));
                     navigate("/");
                 }
             }
@@ -67,7 +67,7 @@ const Posts = () => {
                                     Edit
                                 </Button>
                             </Link>
-                            <Button bgColor="bg-red-500" onClick={deletePost}>
+                            <Button bgColor="bg-red-500" onClick={deletePostHandler}>
                                 Delete
                             </Button>
                         </div>
