@@ -22,7 +22,7 @@ const Login = () => {
                     if(currentUser){
                         dispatch(authLogin(currentUser))
                         navigate("/");
-                        console.log('Login component mounted');
+                        // console.log('Login component mounted');
                     }
                 }
         } catch (error) {

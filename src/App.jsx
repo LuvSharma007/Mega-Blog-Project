@@ -19,7 +19,7 @@ const App = () => {
       const currentUser = await authService.isLogin();
       if (currentUser) {
         dispatch(login(currentUser));
-        console.log('App render - user found :', currentUser);
+        // console.log('App render - user found :', currentUser);
       } else {
         dispatch(logout());
         console.log('App render - no user found');
